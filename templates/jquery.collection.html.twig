@@ -1,0 +1,46 @@
+{#
+# jquery.collection.html.twig
+#
+# Adds the following html attributes to the root node of your collection fields:
+#
+# - data-prototype-name: placeholder used in the prototype to replace element indexes on the collection
+# - data-allow-add: if set to false, plugin will automatically set allow_add option to false
+# - data-allow-delete: if set to false, plugin will automatically set allow_remove option to false
+# - data-name-prefix: contains the collection's prefix used in descendant field names
+#
+# Those information let you configure the plugin options automatically.
+#
+# If you are already using a form theme, you can use both by using:
+# {%
+#   form_theme myForm
+#       'FuzAppBundle::my-form-theme.html.twig'
+#       'FuzAppBundle::jquery.collection.html.twig'
+#       ...
+# %}
+#}
+
+{% block collection_widget %}
+    {% apply spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': form_row(prototype)}) %}
+            {% set attr = attr|merge({'data-prototype-name': prototype.vars.name}) %}
+        {% endif %}
+        {% set attr = attr|merge({'data-allow-add': allow_add ? 1 : 0}) %}
+        {% set attr = attr|merge({'data-allow-remove': allow_delete ? 1 : 0 }) %}
+        {% set attr = attr|merge({'data-name-prefix': full_name}) %}
+        {{ block('form_widget') }}
+    {% endapply %}
+{% endblock collection_widget %}
+
+{% block step_row %}
+    <div class="card mb-3">
+        <div class="card-header text-right">
+            <a href="#" class="collection-up btn btn-secondary mr-1"><i class="fas fa-angle-up"></i></a>
+            <a href="#" class="collection-down btn btn-secondary mr-1"><i class="fas fa-angle-down"></i></a>
+            <a href="#" class="collection-remove btn btn-danger mr-1"><i class="fas fa-trash"></i></a>
+        </div>
+        <div class="card-body">
+            {{ form_row(form) }}
+        </div>
+    </div>
+{% endblock %}
